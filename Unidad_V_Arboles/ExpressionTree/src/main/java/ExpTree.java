@@ -10,21 +10,23 @@ public class ExpTree implements ExpressionService {
 	public ExpTree() {
 	    System.out.print("Introduzca la expresion en notacion infija con todos los parentesis y blancos: ");
 
-		// token analyzer
+		// Lectura del teclado hasta encontrarse con un "\n".
 	    Scanner inputScanner = new Scanner(System.in).useDelimiter("\\n");
-	    String line= inputScanner.nextLine();
+	    String line = inputScanner.nextLine();
 	    inputScanner.close();
 
 	    buildTree(line);
 	}
 	
 	private void buildTree(String line) {	
-		  // space separator among tokens
+		  // En lineScanner se guarda la linea como si fuera un vector.
+		  // Lo que sirvio para separar cada token es el \\s que es el espacio.
 		  Scanner lineScanner = new Scanner(line).useDelimiter("\\s+");
-		  root= new Node(lineScanner);
+		  root = new Node(lineScanner);
 		  lineScanner.close();
 	}
 
+	// Notacion Prefija
 	public void preOrder(){
 		if(root == null){
 			throw new RuntimeException("Arbol vacio");
@@ -33,7 +35,6 @@ public class ExpTree implements ExpressionService {
 		preOrderRec(current);
 		System.out.println();
 	}
-
 	private void preOrderRec(Node current){
 		if(current == null){
 			return;
@@ -43,6 +44,7 @@ public class ExpTree implements ExpressionService {
 		preOrderRec(current.right);
 	}
 
+	// Notacion Postfija
 	public void postOrder(){
 		if(root == null){
 			throw new RuntimeException("Arbol vacio");
@@ -51,7 +53,6 @@ public class ExpTree implements ExpressionService {
 		postOrderRec(current);
 		System.out.println();
 	}
-
 	private void postOrderRec(Node current){
 		if(current == null){
 			return;
@@ -61,6 +62,7 @@ public class ExpTree implements ExpressionService {
 		System.out.print(current.data + " ");
 	}
 
+	// Notacion inFija
 	public void inOrder(){
 		if(root == null){
 			throw new RuntimeException("Arbol vacio");
@@ -69,7 +71,6 @@ public class ExpTree implements ExpressionService {
 		inOrderRec(current);
 		System.out.println();
 	}
-
 	private void inOrderRec(Node current){
 		if(current == null){
 			return;
@@ -93,7 +94,6 @@ public class ExpTree implements ExpressionService {
 		Node current = root;
 		return evalRec(current);
 	}
-
 	private double evalRec(Node current){
 		if(current == null){
 			throw new RuntimeException("Invalid Node");
@@ -111,6 +111,7 @@ public class ExpTree implements ExpressionService {
 		}
 		return left;
 	}
+
 	// Permite crear un nodo.
 	static final class Node {
 		private String data;
@@ -119,12 +120,11 @@ public class ExpTree implements ExpressionService {
 		private Scanner lineScanner;
 
 		public Node(Scanner theLineScanner) {
-			lineScanner= theLineScanner;
-			
+			lineScanner = theLineScanner;
 			Node auxi = buildExpression();
-			data= auxi.data;
-			left= auxi.left;
-			right= auxi.right;
+			data = auxi.data;
+			left = auxi.left;
+			right = auxi.right;
 			// Validamos que no haya nada mas
 			if (lineScanner.hasNext() ) 
 				throw new RuntimeException("Bad expression");
@@ -180,18 +180,21 @@ public class ExpTree implements ExpressionService {
 			// Retornamos el nodo
 			return n;
 		}
-
-
-
 	}  // end Node class
 
 	// hasta que armen los testeos
 	public static void main(String[] args) {
 		ExpressionService myExp = new ExpTree();
 		// ( ( 2 + 3.5 ) * -10 )
+		System.out.print("Notacion preFija: ");
 		myExp.preOrder();
+		System.out.println();
+		System.out.print("Notacion postFija: ");
 		myExp.postOrder();
+		System.out.println();
+		System.out.print("Notacion inFija: ");
 		myExp.inOrder();
+		System.out.println();
 		System.out.println( myExp.eval() );
 	}
 
