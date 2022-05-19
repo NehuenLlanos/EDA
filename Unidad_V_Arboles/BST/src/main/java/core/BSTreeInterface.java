@@ -21,4 +21,12 @@ public interface BSTreeInterface<T extends Comparable<? super T>> extends Iterab
 
 	T getMax();
 
+	void printByLevels();
+
+	int getOcurrences(T element);
+
+	T getCommonNode(T element1, T element2);
+
+	//T getCommonNodeWithRepeated(T element1, T element2);
+
 }

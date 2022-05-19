@@ -1,9 +1,6 @@
 package core;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T>{
     private Node root;
@@ -120,6 +117,141 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T>{
         return current.data;
     }
 
+    public void printByLevels(){
+        if(root == null){
+            System.out.println(" ");
+            return;
+        }
+        Queue<Node<T>> queue = new LinkedList<>();
+        queue.add(root);
+        while(!queue.isEmpty()){
+            Node<T> current = queue.poll();
+            System.out.print(current + " ");
+            if(current.left != null){
+                queue.add(current.left);
+            }
+            if(current.right != null){
+                queue.add(current.right);
+            }
+        }
+    }
+
+    public int getOcurrences(T element){
+        if(root == null || element == null){
+            return 0;
+        }
+        int ans = 0;
+        Node<T> current = root;
+        while(current != null){
+            if(current.data.compareTo(element) == 0){
+                ans++;
+            }
+            if(element.compareTo(current.data) > 0){
+                current = current.right;
+            }else{
+                current = current.left;
+            }
+        }
+        return ans;
+    }
+
+    public T getCommonNode(T element1, T element2){
+        if(element1.compareTo(element2) == 0 || root == null){
+            return null;
+        }
+        Deque<T> queue1 = new LinkedList<>();
+        Deque<T> queue2 = new LinkedList<>();
+        boolean flag = queueCreation(root, element1, queue1);
+        if(!flag){
+            return null;
+        }
+        flag = queueCreation(root, element2, queue2);
+        if(!flag){
+            return null;
+        }
+        T aux1 = queue1.pollFirst();
+        T aux2 = queue2.pollFirst();
+        T ans = null;
+        while(aux1 != null && aux2 != null && aux1 == aux2){
+            ans = aux1;
+            aux1 = queue1.pollFirst();
+            aux2 = queue2.pollFirst();
+        }
+        return ans;
+    }
+
+    private boolean queueCreation(Node<T> root, T element, Deque<T> queue){
+        Node<T> current = root;
+        boolean flag = false;
+        while(current != null && !flag){
+            queue.addLast(current.data);
+            if(element.compareTo(current.data) == 0){
+                flag = true;
+            }else if(element.compareTo(current.data) > 0){
+                current =  current.right;
+            }else{
+                current = current.left;
+            }
+        }
+        return flag;
+    }
+
+    public T getCommonNodeWithRepeated(T element1, T element2){
+        if(root == null || element1 == null || element2 == null){
+            return null;
+        }
+        if(element1 != element2){
+            return getCommonNode(element1, element2);
+        }
+        Node<T> current = queueCreationWithRep(root, element1);
+//        Node<T> current = root;
+//        boolean flag = false;
+//        while(current != null && !flag){
+//            if(element1.compareTo(current.data) == 0){
+//                flag = true;
+//            }else if(element1.compareTo(current.data) > 0){
+//                current =  current.right;
+//            }else{
+//                current = current.left;
+//            }
+//        }
+        if(current == null){
+            return null;
+        }
+        // flag = false;
+        current = current.left;
+        current = queueCreationWithRep(current, element2);
+//        while(current != null && !flag){
+//            if(element1.compareTo(current.data) == 0){
+//                flag = true;
+//            }else if(element1.compareTo(current.data) > 0){
+//                current =  current.right;
+//            }else{
+//                current = current.left;
+//            }
+//        }
+        if(current == null){
+            return null;
+        }
+        return element1;
+    }
+
+    private Node<T> queueCreationWithRep(Node<T> current, T element){
+        boolean flag = false;
+        while(current != null && !flag){
+            if(element.compareTo(current.data) == 0){
+                flag = true;
+            }else if(element.compareTo(current.data) > 0){
+                current =  current.right;
+            }else{
+                current = current.left;
+            }
+        }
+        if(!flag){
+            return null;
+        }
+        return current;
+    }
 
     public NodeTreeInterface<T> getRoot(){
         return root;
@@ -278,8 +410,8 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T>{
         NodeTreeInterface<T> current;
 
         public BSTInOrderIterator() {
-            stack= new Stack<>();
-            current= root;
+            stack = new Stack<>();
+            current = root;
 
         }
 
@@ -303,12 +435,12 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T>{
 
     public static void main(String[] args) {
         BST<Integer> myTree = new BST<>();
-//        myTree.insert(120);
-//        myTree.insert(100);
-//        myTree.insert(200);
-//        myTree.insert(20);
-//        myTree.insert(100);
-//        myTree.insert(100);
+        myTree.insert(120);
+        myTree.insert(100);
+        myTree.insert(200);
+        myTree.insert(20);
+        myTree.insert(100);
+        myTree.insert(100);
         myTree.insertInBST(120);
         myTree.insertInBST(100);
         myTree.insertInBST(200);
@@ -335,5 +467,67 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T>{
         System.out.println(myTree.getMax());
         System.out.println("-------------GETMIN------------");
         System.out.println(myTree.getMin());
+        System.out.println("-------------PRINTBYLEVELS------------");
+        myTree.printByLevels();
+        System.out.println();
+        myTree.setTraversal(Traversal.BYLEVELS);
+        System.out.println("-------------PRINTBYLEVELSWITHITERATOR------------");
+        for (Integer data : myTree) {
+            System.out.print(data + " ");
+        }
+        System.out.println();
+        System.out.println("-------------PRINTBYLEVELSWITHITERATORV2------------");
+        for (Integer data : myTree) {
+            System.out.print(data + " ");
+        }
+        myTree.setTraversal(Traversal.INORDER);
+        System.out.println();
+        System.out.println("-------------PRINTINORDERWITHITERATOR------------");
+        for (Integer data : myTree) {
+            System.out.print(data + " ");
+        }
+        System.out.println();
+        System.out.println("-------------PRINTINORDERWITHITERATORV2------------");
+        for (Integer data : myTree) {
+            System.out.print(data + " ");
+        }
+        System.out.println();
+        System.out.println("-------------GETOCURRENCES------------");
+        System.out.println(myTree.getOcurrences(100));
+        System.out.println(myTree.getOcurrences(200));
+          // POR SEPARADO
+//        System.out.println("-------------GETCOMMONNODEWITHOUTREPS------------");
+//
+//        myTree.insert(5);
+//        myTree.insert(70);
+//        myTree.insert(30);
+//        myTree.insert(35);
+//        myTree.insert(20);
+//        myTree.insert(40);
+//        myTree.insert(80);
+//        myTree.insert(90);
+//        myTree.insert(85);
+//
+//        System.out.println(myTree.getCommonNode(80, 85));
+//        System.out.println(myTree.getCommonNode(85, 92));
+//        System.out.println(myTree.getCommonNode(40, 85));
+//        System.out.println(myTree.getCommonNode(85, 85));
+
+//        System.out.println("-------------GETCOMMONNODEWITHREPS------------");
+//        myTree.insert(5);
+//        myTree.insert(70);
+//        myTree.insert(30);
+//        myTree.insert(70);
+//        myTree.insert(20);
+//        myTree.insert(40);
+//        myTree.insert(80);
+//        myTree.insert(90);
+//        myTree.insert(85);
+//
+//        System.out.println( myTree.getCommonNodeWithRepeated(40, 40));
+//        System.out.println( myTree.getCommonNodeWithRepeated(0, 85));
+//        System.out.println( myTree.getCommonNodeWithRepeated(70, 70));
+//        System.out.println( myTree.getCommonNodeWithRepeated(40, 80));
+//        System.out.println( myTree.getCommonNodeWithRepeated(85, 80));
     }
 }
