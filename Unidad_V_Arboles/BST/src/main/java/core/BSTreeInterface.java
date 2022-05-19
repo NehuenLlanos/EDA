@@ -15,4 +15,10 @@ public interface BSTreeInterface<T extends Comparable<? super T>> extends Iterab
 	
 	int getHeight();
 
+	boolean contains(T myData);
+
+	T getMin();
+
+	T getMax();
+
 }

@@ -83,6 +83,44 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T>{
         inOrderRec(current.right);
     }
 
+    public boolean contains(T myData){
+        Node<T> current = root;
+        while(current != null){
+            if(myData.compareTo(current.data) == 0){
+                return true;
+            }
+            if(myData.compareTo(current.data) > 0){
+                current = current.right;
+            }else{
+                current = current.left;
+            }
+        }
+        return false;
+    }
+
+    public T getMax(){
+        if(root == null){
+            return null;
+        }
+        Node<T> current = root;
+        while(current.right != null){
+            current = current.right;
+        }
+        return current.data;
+    }
+
+    public T getMin(){
+        if(root == null){
+            return null;
+        }
+        Node<T> current = root;
+        while(current.left != null){
+            current = current.left;
+        }
+        return current.data;
+    }
+
+
     public NodeTreeInterface<T> getRoot(){
         return root;
     }
@@ -289,5 +327,13 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T>{
         myTree.postOrder();
         System.out.println("-------------INORDER------------");
         myTree.inOrder();
+        System.out.println("-------------CONTAINS------------");
+        System.out.println(myTree.contains(20));
+        System.out.println(myTree.contains(120));
+        System.out.println(myTree.contains(30));
+        System.out.println("-------------GETMAX------------");
+        System.out.println(myTree.getMax());
+        System.out.println("-------------GETMIN------------");
+        System.out.println(myTree.getMin());
     }
 }
