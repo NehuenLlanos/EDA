@@ -62,14 +62,13 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T>{
     public void postOrder(){
         postOrderRec(root);
     }
-
     private void postOrderRec(Node<T> current){
         if(current == null) {
             return;
         }
         postOrderRec(current.left);
         postOrderRec(current.right);
-        System.out.println(current.getData());
+        System.out.println(current);
     }
 
     public void inOrder(){
@@ -80,7 +79,7 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T>{
             return;
         }
         inOrderRec(current.left);
-        System.out.println(current.getData());
+        System.out.println(current);
         inOrderRec(current.right);
     }
 
@@ -124,6 +123,10 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T>{
 
         public T getData(){
             return data;
+        }
+
+        public String toString(){
+            return data.toString();
         }
 
         public NodeTreeInterface<T> getLeft(){

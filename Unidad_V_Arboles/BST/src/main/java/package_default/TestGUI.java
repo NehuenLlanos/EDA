@@ -27,10 +27,10 @@ public class TestGUI extends Application {
 		StackPane root = new StackPane();
 		Scene scene = new Scene(root, 500, 500);
 
-		BST<Integer> myTree = createModel();
-		
-	
-		GraphicsTree<Integer> c = new GraphicsTree<>(myTree);
+		//BST<Integer> myTree = createModel();
+		BST<Person> myTree = createModelPerson();
+		//GraphicsTree<Integer> c = new GraphicsTree<>(myTree);
+		GraphicsTree<Person> c = new GraphicsTree<>(myTree);
 
 		c.widthProperty().bind(scene.widthProperty());
 		c.heightProperty().bind(scene.heightProperty());
@@ -43,7 +43,7 @@ public class TestGUI extends Application {
 	}
 
     
-	private BST<Integer> createModel2() {
+	private BST<Integer> createModeVersion2() {
 		BST<Integer> myTree = new BST<>();
 		myTree = new BST<>();
 		myTree.insert(50);
@@ -63,15 +63,21 @@ public class TestGUI extends Application {
 	
 	private BST<Integer> createModel() {
 		BST<Integer> myTree = new BST<>();
-	myTree.insert(120);
-	myTree.insert(100);
-	myTree.insert(200);
-	myTree.insert(20);
-	myTree.insert(100);
-	myTree.insert(100);
-	
-	return myTree;
+		myTree.insert(120);
+		myTree.insert(100);
+		myTree.insert(200);
+		myTree.insert(20);
+		myTree.insert(100);
+		myTree.insert(100);
+		return myTree;
 	}
-	
-
+	private BST<Person> createModelPerson() {
+		BST<Person> myTree = new BST<>();
+		myTree.insert(new Person(50, "Ana"));
+		myTree.insert(new Person(60, "Juan"));
+		myTree.insert(new Person(80, "Sergio"));
+		myTree.insert(new Person(20, "Lila"));
+		myTree.insert(new Person(77, "Ana"));
+		return myTree;
+	}
 }
