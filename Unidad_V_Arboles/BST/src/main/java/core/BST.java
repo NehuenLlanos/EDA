@@ -12,7 +12,6 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T>{
         if(myData == null){
             return;
         }
-
         if(root == null) {
             root = new Node<>(myData);
         }else{
@@ -20,16 +19,69 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T>{
         }
     }
 
+    public void insertInBST(T myData){
+        if(myData == null){
+            return;
+        }
+        if(root == null){
+            root = new Node<>(myData);
+            return;
+        }
+        Node<T> current = root;
+        Node<T> previous = current;
+        int flag = 0;
+        while(current != null){
+            previous = current;
+            if(myData.compareTo(current.getData()) > 0){
+                current = current.right;
+                flag = 1;
+            }else{
+                current = current.left;
+                flag = 2;
+            }
+        }
+        if(flag == 1){
+            previous.right = new Node<>(myData);
+        }else if (flag == 2){
+            previous.left = new Node<>(myData);
+        }
+    }
+
     public void preOrder(){
-        return;
+        preOrderRec(root);
+    }
+    private void preOrderRec(Node<T> current){
+        if(current == null){
+            return;
+        }
+        System.out.println(current.getData());
+        preOrderRec(current.left);
+        preOrderRec(current.right);
     }
 
     public void postOrder(){
-        return;
+        postOrderRec(root);
+    }
+
+    private void postOrderRec(Node<T> current){
+        if(current == null) {
+            return;
+        }
+        postOrderRec(current.left);
+        postOrderRec(current.right);
+        System.out.println(current.getData());
     }
 
     public void inOrder(){
-        return;
+        inOrderRec(root);
+    }
+    private void inOrderRec(Node<T> current){
+        if(current == null) {
+            return;
+        }
+        inOrderRec(current.left);
+        System.out.println(current.getData());
+        inOrderRec(current.right);
     }
 
     public NodeTreeInterface<T> getRoot(){
@@ -52,7 +104,6 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T>{
         }
         return 1 + left;
     }
-
     public void delete(T myData) {
         if (myData == null)
             throw new RuntimeException("element cannot be null");
@@ -181,9 +232,6 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T>{
             return currentNode.getData();
         }
     }
-
-
-
     class BSTInOrderIterator implements Iterator<T> {
         Stack<NodeTreeInterface<T>> stack;
         NodeTreeInterface<T> current;
@@ -214,19 +262,29 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T>{
 
     public static void main(String[] args) {
         BST<Integer> myTree = new BST<>();
-        myTree.insert(120);
-        myTree.insert(100);
-        myTree.insert(200);
-        myTree.insert(20);
-        myTree.insert(100);
-        myTree.insert(100);
+//        myTree.insert(120);
+//        myTree.insert(100);
+//        myTree.insert(200);
+//        myTree.insert(20);
+//        myTree.insert(100);
+//        myTree.insert(100);
+        myTree.insertInBST(120);
+        myTree.insertInBST(100);
+        myTree.insertInBST(200);
+        myTree.insertInBST(20);
+        myTree.insertInBST(100);
+        myTree.insertInBST(100);
         myTree.setTraversal(Traversal.BYLEVELS);
         Iterator<Integer> it = myTree.iterator();
         System.out.println(it.next());
         System.out.println(it.next());
         System.out.println(it.next());
         System.out.println(it.next());
-
-
+        System.out.println("-------------PREORDER------------");
+        myTree.preOrder();
+        System.out.println("-------------POSTORDER------------");
+        myTree.postOrder();
+        System.out.println("-------------INORDER------------");
+        myTree.inOrder();
     }
 }
