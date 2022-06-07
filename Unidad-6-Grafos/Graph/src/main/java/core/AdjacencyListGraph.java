@@ -140,16 +140,58 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 		return true;
 	}
 
+	// Permite remover todas las aristas entre un vertice y otro.
 	@Override
 	public boolean removeEdge(V aVertex, V otherVertex) {
-		// COMPLETAR
-		throw new RuntimeException("not implemented yet");
+		if(aVertex == null || otherVertex == null){
+			throw new RuntimeException("No se permite vertices null");
+		}
+		boolean ans = false;
+		// Si es simple tenemos que eliminar de cada vertices las aristas que unen a cada uno.
+		// Preguntar si es lo mismo para grafos simples y grafos con multiaristas
+		Iterator<InternalEdge> edgesVertex = getAdjacencyList().get(aVertex).iterator();
+		while(edgesVertex.hasNext()){
+			if(edgesVertex.next().target == otherVertex){
+				edgesVertex.remove();
+				ans = true;
+			}
+		}
+		Iterator<InternalEdge> edgesOtherVertex = getAdjacencyList().get(otherVertex).iterator();
+		while(edgesOtherVertex.hasNext()){
+			if(edgesOtherVertex.next().target == edgesOtherVertex){
+				edgesOtherVertex.remove();
+				ans = true;
+			}
+		}
+		return ans;
 	}
-	
+
+	// Permite remover la arista theEdge entre un vertice y otro.
 	@Override
 	public boolean removeEdge(V aVertex, V otherVertex, E theEdge) {
-		// COMPLETAR
-		throw new RuntimeException("not implemented yet");
+		if(aVertex == null || otherVertex == null){
+			throw new RuntimeException("No se permite vertices null");
+		}
+		boolean ans = false;
+		// Si es simple tenemos que eliminar de cada vertices las aristas que unen a cada uno.
+		// Preguntar si es lo mismo para grafos simples y grafos con multiaristas
+		Iterator<InternalEdge> edgesVertex = getAdjacencyList().get(aVertex).iterator();
+		while(edgesVertex.hasNext()){
+			InternalEdge aux = edgesVertex.next();
+			if(aux.target == otherVertex && aux.edge == theEdge){
+				edgesVertex.remove();
+				ans = true;
+			}
+		}
+		Iterator<InternalEdge> edgesOtherVertex = getAdjacencyList().get(otherVertex).iterator();
+		while(edgesOtherVertex.hasNext()){
+			InternalEdge aux = edgesOtherVertex.next();
+			if(aux.target == otherVertex && aux.edge == theEdge){
+				edgesOtherVertex.remove();
+				ans = true;
+			}
+		}
+		return ans;
 	}
 
 	@Override
@@ -191,6 +233,12 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 		}
 		int ans = getAdjacencyList().get(aVertex).size();
 		return ans;
+	}
+
+	public void printBFS(V vertex){
+		Queue<V> vertexQueue = new LinkedList<>();
+
+
 	}
 	class InternalEdge {
 		E edge;
