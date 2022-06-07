@@ -96,9 +96,10 @@ public class BinaryTree implements BinaryTreeService {
 		}
 	}
 
-	public void toFile(String fileName){
-
-	}
+//	public void toFile(String fileName){
+//		Queue<String> queue = new LinkedList<>();
+//
+//	}
 
 	// hasta el get() no se evalua
 	class Node {
