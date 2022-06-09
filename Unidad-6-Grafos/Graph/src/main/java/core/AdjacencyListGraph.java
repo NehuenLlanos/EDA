@@ -235,11 +235,51 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 		return ans;
 	}
 
-	public void printBFS(V vertex){
-		Queue<V> vertexQueue = new LinkedList<>();
-
-
+	public void printBFS(V startNode){
+//		if(startNode == null /*|| !existsVertex(startNode*/)){
+//			throw new IllegalArgumentException(Messages.getString("Vertex Parameter Error."));
+//		}
+		if(startNode == null){
+			throw new IllegalArgumentException(Messages.getString("Vertex Parameter Error."));
+		}
+		Set<V> visited = new HashSet<>();
+		Queue<V> theQueue = new LinkedList<>();
+		theQueue.add(startNode);
+		while(!theQueue.isEmpty()){
+			V current = theQueue.poll();
+			if(visited.contains(current)){
+				continue;
+			}
+			visited.add(current);
+			System.out.println(current);
+			Collection<InternalEdge> adjListOther = getAdjacencyList().get(current);
+			for(InternalEdge internalEdge : adjListOther){
+				if(!visited.contains(internalEdge.target)){
+					theQueue.add(internalEdge.target);
+				}
+			}
+		}
 	}
+
+	public void printAllPaths(V startNode, V endNode){
+		if(startNode == null || endNode == null){
+			throw new IllegalArgumentException(Messages.getString("Parameter error"));
+		}
+
+		if(acceptSelfLoop){
+			throw new IllegalArgumentException(Messages.getString("Get all paths error"));
+		}
+
+		Set<V> visited = new HashSet<>();
+		ArrayList<V> path = new ArrayList<>();
+
+		printAllPaths(startNode, endNode, visited,  path);
+	}
+
+	public void printAllPaths(V startNode, V endNode, Set<V> visited, ArrayList<V> path){
+		return;
+	}
+
 	class InternalEdge {
 		E edge;
 		V target;
