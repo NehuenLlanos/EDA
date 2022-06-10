@@ -9,7 +9,7 @@ public class SortedLinkedListWithHeader<T extends Comparable<? super T>> impleme
 
     // Verision Iterativa de la catedra
     @Override
-    public boolean insert(T data) {
+    public boolean insertIterative(T data) {
         checkDataNotNull(data);
         Node prev = null;
         Node current = root;
@@ -48,8 +48,7 @@ public class SortedLinkedListWithHeader<T extends Comparable<? super T>> impleme
 
 
     // Versión iterativa resuelto totalmente desde SortedLinkedList
-    @Override
-    public boolean remove(T data) {
+    public boolean removeIterative(T data) {
         checkDataNotNull(data);
         Node prev = null;
         Node current = root;
@@ -157,7 +156,6 @@ public class SortedLinkedListWithHeader<T extends Comparable<? super T>> impleme
         return last.data;
     }
 
-    @Override
     public Iterator<T> iterator(){
         return new Iterator<T>() {
             Node current = root;
@@ -273,14 +271,14 @@ public class SortedLinkedListWithHeader<T extends Comparable<? super T>> impleme
 //        }
 //        Es decir, deberá poder participar de “foreach” readonly (solo para leer la información a
 //                través del cursor).
-        SortedListService<String> lista = new SortedLinkedListWithHeader<>();
-        lista.insert("aca");
-        lista.insert("ah");
-        lista.insert("bio");
-        lista.insert("hola");
-        lista.insert("tal");
-        lista.insert("tito");
-        lista.insert("veo");
+        SortedLinkedListWithHeader<String> lista = new SortedLinkedListWithHeader<>();
+        lista.insertIterative("aca");
+        lista.insertIterative("ah");
+        lista.insertIterative("bio");
+        lista.insertIterative("hola");
+        lista.insertIterative("tal");
+        lista.insertIterative("tito");
+        lista.insertIterative("veo");
         lista.dump();
         System.out.println("Size: " + lista.size());
         System.out.println("Min: " + lista.getMin());
@@ -288,22 +286,11 @@ public class SortedLinkedListWithHeader<T extends Comparable<? super T>> impleme
         System.out.println("-------------------------");
         Iterator<String> iter = lista.iterator();
         int rec = 0;
-//        while(iter.hasNext()) {
-              //iter.next();
-//            if (rec % 2 == 1)
-//                iter.remove();
-//            rec++;
-//
-//        }
         while(iter.hasNext()){
             iter.next();
             if(rec == 0){
                 iter.remove();
             }
-//            if(rec == 6){
-//                iter.remove();
-//            }
-
             rec++;
         }
         lista.dump();
@@ -312,4 +299,3 @@ public class SortedLinkedListWithHeader<T extends Comparable<? super T>> impleme
         System.out.println("Max: " + lista.getMax());
     }
 }
-

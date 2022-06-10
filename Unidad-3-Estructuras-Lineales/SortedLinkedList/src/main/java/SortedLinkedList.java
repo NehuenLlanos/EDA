@@ -4,8 +4,7 @@ import java.util.Iterator;
 public class SortedLinkedList<T extends Comparable<? super T>> implements SortedListService<T>{
     private Node root;
 
-    // iterativa
-    //	@Override
+    // Version Iterativa de la catedra
     public boolean insert1(T data) {
         if (data == null) {
             throw new IllegalArgumentException("data cannot be null");
@@ -33,8 +32,7 @@ public class SortedLinkedList<T extends Comparable<? super T>> implements Sorted
         return true;
     }
 
-    // recursiva desde afuera
-    //	@Override
+    // Version Recursiva de la catedra
     public boolean insert2(T data) {
         if (data == null)
             throw new IllegalArgumentException("data cannot be null");
@@ -62,7 +60,7 @@ public class SortedLinkedList<T extends Comparable<? super T>> implements Sorted
 
     }
 
-    // delega en Node
+    // Version Recursiva delega al nodo
     @Override
     public boolean insert(T data) {
         if (data == null)

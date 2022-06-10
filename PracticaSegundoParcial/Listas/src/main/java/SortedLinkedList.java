@@ -3,8 +3,8 @@ public class SortedLinkedList<T extends Comparable<? super T>> implements Sorted
 
     private Node root;
 
-    // iterativa
-//	@Override
+    /* Inserciones implementadas por la catedra */
+    // Version Iterativa implementada por la catedra
     public boolean insert1(T data) {
         if (data == null)
             throw new IllegalArgumentException("data cannot be null");
@@ -38,8 +38,7 @@ public class SortedLinkedList<T extends Comparable<? super T>> implements Sorted
         return true;
     }
 
-    // recursiva desde afuera
-//	@Override
+    // Version Recursiva implementada por la catedra
     public boolean insert2(T data) {
         if (data == null)
             throw new IllegalArgumentException("data cannot be null");
@@ -70,6 +69,25 @@ public class SortedLinkedList<T extends Comparable<? super T>> implements Sorted
 
     }
 
+    // Version Recursiva delega al nodo implementada por la catedra
+    @Override
+    public boolean insert(T data) {
+        if (data == null)
+            throw new IllegalArgumentException("data cannot be null");
+
+        if (root == null) {
+            root= new Node(data, null);
+            return true;
+        }
+
+        boolean[] rta= new boolean[1];
+        root =root.insert( data,  rta);
+
+        return rta[0];
+    }
+
+
+    /* Inserciones Implementadas por mi */
     @Override
     public boolean insertIterative(T data) {
         if(data == null){
@@ -105,19 +123,20 @@ public class SortedLinkedList<T extends Comparable<? super T>> implements Sorted
     @Override
     public boolean insertRecursiveInSortedListClass(T data) {
         boolean[] ans = new boolean[1];
-        root = insertRecursiveInSortedListClassAux(data, root, ans[0]);
+        root = insertRecursiveInSortedListClassAux(data, root, ans);
         return ans[0];
     }
-    private Node insertRecursiveInSortedListClassAux(T data, Node current, Boolean flag){
+    private Node insertRecursiveInSortedListClassAux(T data, Node current, boolean[] ans){
         if(current == null || current.data.compareTo(data) > 0){
-            Node ans = new Node(data);
-            ans.next = current;
-            flag = true;
-            return ans;
+            Node aux = new Node(data);
+            aux.next = current;
+            ans[0] = true;
+            return aux;
         }else if(current.data.compareTo(data) == 0){
+            ans[0] = false;
             return current;
         }
-        current.next = insertRecursiveInSortedListClassAux(data, current.next, flag);
+        current.next = insertRecursiveInSortedListClassAux(data, current.next, ans);
         return current;
     }
 
@@ -137,40 +156,74 @@ public class SortedLinkedList<T extends Comparable<? super T>> implements Sorted
     }
 
 
-
-    // delega en Node
-    @Override
-    public boolean insert(T data) {
-        if (data == null)
-            throw new IllegalArgumentException("data cannot be null");
-
-        if (root == null) {
-            root= new Node(data, null);
-            return true;
-        }
-
-        boolean[] rta= new boolean[1];
-        root =root.insert( data,  rta);
-
-        return rta[0];
-    }
-
     @Override
     public boolean find(T data) {
         return getPos(data) != -1;
     }
 
+    /* Implementaciones de remove realizadas por mi */
 
-    // delete resuelto todo en la clase SortedLinkedList, iterativo
+    // Version Iterativa
     @Override
-    public boolean remove(T data) {
+    public boolean removeIterative(T data) {
+        if(data == null){
+            return false;
+        }
+        Node current = root;
+        Node previous = null;
 
-        // COMPLETAR!!!
+        while(current != null && current.data.compareTo(data) < 0){
+            previous = current;
+            current = current.next;
+        }
+
+        if(current != null && current.data.compareTo(data) == 0){
+            // Si es el root tengo que actualizarlo
+            if(current == root){
+                root = root.next;
+            }else { // Si no es el root entonces utilizo el previous para borrar el nodo solicitado
+                previous.next = current.next;
+            }
+            return true;
+        }
         return false;
     }
 
+    // Version Recursiva implementada en la lista
+    private boolean removeRecursiveInSortedListClass(T data){
+        if(data == null){
+            return false;
+        }
+        boolean[] ans = new boolean[1];
+        root = removeRecursiveInSortedListClassAux(data, root, ans);
+        return ans[0];
+    }
+    private Node removeRecursiveInSortedListClassAux(T data, Node current, boolean[] ans){
+        if(current == null){
+            ans[0] = false;
+            return null;
+        }
+        if(current.data.compareTo(data) == 0){
+            ans[0] = true;
+            return current.next;
+        }
+        if(current.data.compareTo(data) > 0){
+            ans[0] = false;
+            return current;
+        }
+        current.next = removeRecursiveInSortedListClassAux(data, current.next, ans);
+        return current;
+    }
 
-
+    // Version Recursiva delegada al nodo
+    public boolean removeRecursiveInNodeClass(T data){
+        if(data == null || root == null){
+            return false;
+        }
+        boolean[] ans = new boolean[1];
+        root = root.removeInNode(data, ans);
+        return ans[0];
+    }
     @Override
     public boolean isEmpty() {
         return root == null;
@@ -190,7 +243,6 @@ public class SortedLinkedList<T extends Comparable<? super T>> implements Sorted
         return rta;
     }
 
-
     @Override
     public void dump() {
         Node current = root;
@@ -201,7 +253,6 @@ public class SortedLinkedList<T extends Comparable<? super T>> implements Sorted
             current= current.next;
         }
     }
-
 
     @Override
     public boolean equals(Object other) {
@@ -244,15 +295,24 @@ public class SortedLinkedList<T extends Comparable<? super T>> implements Sorted
 
     @Override
     public T getMin() {
-        // COMPLETAR
-        return null;
+        if(root == null){
+            //throw new RuntimeException("Lista vacia");
+            return null;
+        }
+        return root.data;
     }
-
 
     @Override
     public T getMax() {
-        // COMPLETAR
-        return null;
+        if(root == null){
+            return null;
+            //throw new RuntimeException("Lista vacia");
+        }
+        Node current = root;
+        while(current.next != null){
+            current = current.next;
+        }
+        return current.data;
     }
 
     private final class Node {
@@ -311,6 +371,19 @@ public class SortedLinkedList<T extends Comparable<? super T>> implements Sorted
             ans[0] = true;
             return new Node(data, this);
         }
+
+        private Node removeInNode(T data, boolean[] ans){
+            if(this.data.compareTo(data) == 0){
+                ans[0] = true;
+                return next;
+            }
+            if(this.data.compareTo(data) > 0 || next == null){
+                ans[0] = false;
+                return this;
+            }
+            next = next.removeInNode(data, ans);
+            return this;
+        }
     }
 
     public static void main(String[] args) {
@@ -320,26 +393,60 @@ public class SortedLinkedList<T extends Comparable<? super T>> implements Sorted
         l.insert1(40);
         l.insert1(40);
 
+        System.out.println("-----------------------------------------------");
         SortedLinkedList<Integer> l2 = new SortedLinkedList<>();
-        l2.insertIterative(30);
-        l2.insertIterative(80);
-        l2.insertIterative(40);
-        l2.insertIterative(40);
+        System.out.println(l2.removeIterative(30));
+        System.out.println(l2.insertIterative(30));
+        System.out.println(l2.insertIterative(80));
+        System.out.println(l2.insertIterative(40));
+        System.out.println(l2.insertIterative(40));
+        System.out.println(l2.insertIterative(100));
+        System.out.println(l2.removeIterative(40));
 
+        System.out.println("-----------------------------------------------");
         SortedLinkedList<Integer> l3 = new SortedLinkedList<>();
+        System.out.println(l3.removeRecursiveInSortedListClass(20));
         System.out.println(l3.insertRecursiveInSortedListClass(30));
         System.out.println(l3.insertRecursiveInSortedListClass(80));
         System.out.println(l3.insertRecursiveInSortedListClass(40));
         System.out.println(l3.insertRecursiveInSortedListClass(40));
+        System.out.println(l3.insertRecursiveInSortedListClass(50));
+        System.out.println(l3.insertRecursiveInSortedListClass(100));
+        System.out.println(l3.removeRecursiveInSortedListClass(50));
+        System.out.println(l3.removeRecursiveInSortedListClass(100));
 
         System.out.println("-----------------------------------------------");
 
         SortedLinkedList<Integer> l4 = new SortedLinkedList<>();
-        System.out.println(l4.insertRecursiveInNodeClass(30));
-        System.out.println(l4.insertRecursiveInNodeClass(80));
-        System.out.println(l4.insertRecursiveInNodeClass(40));
-        System.out.println(l4.insertRecursiveInNodeClass(40));
-
+        // Testeo con lista vacia
+        System.out.println(l4.removeRecursiveInNodeClass(20)); // False
+        // Primer elemento insertado
+        System.out.println(l4.insertRecursiveInNodeClass(30)); // True
+        // Testeo con 1 solo elemento en la lista
+        System.out.println(l4.removeRecursiveInNodeClass(40)); // False
+        System.out.println(l4.removeRecursiveInNodeClass(30)); // True
+        // Testeo getMin y getMax con lista vacia
+        System.out.println(l4.getMin()); // NULL
+        System.out.println(l4.getMax()); // NULL
+        // Creo la lista grande para testear la insercion
+        System.out.println(l4.insertRecursiveInNodeClass(30)); // True
+        // Testeo getMin y getMax con lista con 1 elemento
+        System.out.println(l4.getMin()); // 30
+        System.out.println(l4.getMax()); // 30
+        // Continuamos agregando
+        System.out.println(l4.insertRecursiveInNodeClass(80)); // True
+        System.out.println(l4.insertRecursiveInNodeClass(40)); // True
+        System.out.println(l4.insertRecursiveInNodeClass(40)); // False
+        System.out.println(l4.insertRecursiveInNodeClass(50)); // True
+        // Testeo getMin y getMax con lista con + de 1 elemento
+        System.out.println(l4.getMin()); // 30
+        System.out.println(l4.getMax()); // 80
+        // Testeo de remocion de 1 elemento que no aparece en la lista
+        System.out.println(l4.removeRecursiveInNodeClass(90)); // False
+        // Testeo de remocion del ultimo elemento
+        System.out.println(l4.removeRecursiveInNodeClass(80)); // True
+        // Testeo de remocion de un elemento del medio
+        System.out.println(l4.removeRecursiveInNodeClass(40)); // True
     }
 
     public static void main2(String[] args) {
