@@ -3,6 +3,7 @@ import java.util.Iterator;
 // lista simplemente encadenada, no acepta repetidos (false e ignora) ni nulls (exception)
 public class SortedLinkedList<T extends Comparable<? super T>> implements SortedListService<T>{
     private Node root;
+
     // iterativa
     //	@Override
     public boolean insert1(T data) {

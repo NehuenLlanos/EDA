@@ -99,7 +99,7 @@ public class SortedLinkedListWithHeader<T extends Comparable<? super T>> impleme
         Node current = root;
         while (current!=null ) {
             System.out.println(current.data);
-            current= current.next;
+            current = current.next;
         }
     }
 
@@ -272,7 +272,7 @@ public class SortedLinkedListWithHeader<T extends Comparable<? super T>> impleme
 //        }
 //        Es decir, deberá poder participar de “foreach” readonly (solo para leer la información a
 //                través del cursor).
-        SortedLinkedListWithHeader<String> lista = new SortedLinkedListWithHeader<>();
+        SortedListService<String> lista = new SortedLinkedListWithHeader<>();
         lista.insert("aca");
         lista.insert("ah");
         lista.insert("bio");
