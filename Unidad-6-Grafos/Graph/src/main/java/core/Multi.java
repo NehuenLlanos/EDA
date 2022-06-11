@@ -2,10 +2,6 @@ package core;
 
 import java.util.Collection;
 
-
-
-
-
 public class Multi<V,E> extends AdjacencyListGraph<V,E> {
 
 	protected Multi(boolean isDirected, boolean acceptSelfLoops, boolean isWeighted) {
