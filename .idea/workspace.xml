@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="50b6c9f8-8503-4ce0-876e-850f508473cc" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Unidad-6-Grafos/Graph/src/main/java/core/AdjacencyListGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/Unidad-6-Grafos/Graph/src/main/java/core/AdjacencyListGraph.java" afterDir="false" />
-    </list>
+    <list default="true" id="50b6c9f8-8503-4ce0-876e-850f508473cc" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,7 +24,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/nehue/Escritorio/EDA",
+    "last_opened_file_path": "C:/Users/nehue/Escritorio/EDA/Unidad-6-Grafos",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -45,6 +42,7 @@
       <workItem from="1652919748697" duration="18000" />
       <workItem from="1652919805441" duration="410000" />
       <workItem from="1654690703049" duration="73000" />
+      <workItem from="1654991659582" duration="22000" />
     </task>
     <servers />
   </component>

@@ -1,9 +1,11 @@
-package core;
+package Ejercicio2.core;
+
+import Ejercicio2.core_service.GraphService;
+import Ejercicio2.use.EmptyEdgeProp;
+import Ejercicio2.core_service.GraphBuilder;
+import Ejercicio2.core_service.GraphService;
 
 import java.util.*;
-
-import core_service.GraphBuilder;
-import core_service.GraphService;
 
 abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 
@@ -150,7 +152,7 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 	// Permite remover todas las aristas entre un vertice y otro.
 	@Override
 	public boolean removeEdge(V aVertex, V otherVertex) {
-		if(!isSimple){
+		if(isDirected){
 			throw new RuntimeException("This method is not valid for multigragh or digraph.");
 		}
 		if(aVertex == null || otherVertex == null){
@@ -170,7 +172,7 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 		Iterator<InternalEdge> edgesOtherVertex = getAdjacencyList().get(otherVertex).iterator();
 		while(edgesOtherVertex.hasNext()){
 			// Si encuentro una que se conecta con otherVertex la elimino y pongo en true el flag ans
-			if(edgesOtherVertex.next().target == edgesOtherVertex){
+			if(edgesOtherVertex.next().target == aVertex){
 				edgesOtherVertex.remove();
 				ans = true;
 			}
@@ -185,8 +187,7 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 			throw new RuntimeException("No se permite vertices null");
 		}
 		boolean ans = false;
-		// Si es simple tenemos que eliminar de cada vertices las aristas que unen a cada uno.
-		// Preguntar si es lo mismo para grafos simples y grafos con multiaristas
+		// Si no es dirigido tenemos que eliminar de cada vertices las aristas que unen a cada uno.
 		Iterator<InternalEdge> edgesVertex = getAdjacencyList().get(aVertex).iterator();
 		while(edgesVertex.hasNext()){
 			InternalEdge aux = edgesVertex.next();
@@ -320,6 +321,27 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 		path.remove(startNode);
 	}
 
+	public int connectedComponents(){
+		Set<V> visited = new HashSet<>();
+		int ans = 0;
+		for(V vertex : adjacencyList.keySet()){
+			if(!visited.contains(vertex)){
+				ans++;
+			}
+			visited.add(vertex);
+			// Recorro las aristas del vertice
+			for(InternalEdge edge : adjacencyList.get(vertex)){
+				// Agrego el vertice como visitado
+				visited.add(edge.target);
+				// Recorro las aristas del vertice conectado con el vertice que es key
+				for(InternalEdge targetEdge : adjacencyList.get(edge.target)){
+					visited.add(targetEdge.target);
+				}
+			}
+		}
+		return ans;
+	}
+
 	class InternalEdge {
 		E edge;
 		V target;
@@ -350,53 +372,34 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 	}
 
 	public static void main(String[] args) {
-//		GraphService <Character,EmptyEdgeProp> g =
-//				new GraphBuilder<Character, EmptyEdgeProp>().
-//						withMultiplicity(Multiplicity.SIMPLE).
-//						withDirected(EdgeMode.UNDIRECTED).
-//						withAcceptSelfLoop(SelfLoop.NO).
-//						withAcceptWeight(Weight.NO).
-//						withStorage(Storage.SPARSE).
-//						build();
-//		g.addEdge('E', 'B', new EmptyEdgeProp());
-//		g.addEdge('A', 'B', new EmptyEdgeProp());
-//		g.addEdge('F', 'B', new EmptyEdgeProp());
-//		g.addVertex('D');
-//		g.addVertex('G');
-//		g.addEdge('E', 'F', new EmptyEdgeProp());
-//		g.addEdge('F', 'A', new EmptyEdgeProp());
-//		g.addEdge('F', 'G', new EmptyEdgeProp());
-//		g.addEdge('U', 'G', new EmptyEdgeProp());
-//		g.addEdge('T', 'U', new EmptyEdgeProp());
-//		g.addEdge('C', 'G', new EmptyEdgeProp());
-//
-//		int ans =  g.numberOfEdges();
-//		System.out.println(ans);
+		GraphService <Character, EmptyEdgeProp> g = GraphFactory.create(Multiplicity.SIMPLE, EdgeMode.UNDIRECTED, SelfLoop.YES, Weight.NO, Storage.SPARSE);
+		g.addEdge('B', 'A', new EmptyEdgeProp());
+		g.addEdge('A', 'C', new EmptyEdgeProp());
+		g.addEdge('B', 'E', new EmptyEdgeProp());
+		g.addEdge('C', 'E', new EmptyEdgeProp());
+		g.addEdge('H', 'E', new EmptyEdgeProp());
+		g.addEdge('E', 'F', new EmptyEdgeProp());
+		g.addEdge('F', 'H', new EmptyEdgeProp());
+		g.addEdge('H', 'G', new EmptyEdgeProp());
+		g.addEdge('C', 'H', new EmptyEdgeProp());
+		g.addEdge('D', 'T', new EmptyEdgeProp());
 
-		GraphService <Character,EmptyEdgeProp> g =
-				new GraphBuilder<Character, EmptyEdgeProp>().
-						withMultiplicity(Multiplicity.MULTIPLE).
-						withDirected(EdgeMode.DIRECTED).
-						withAcceptSelfLoop(SelfLoop.YES).
-						withAcceptWeight(Weight.NO).
-						withStorage(Storage.SPARSE).
-						build();
+		g.addVertex('X');
 
-		g.addVertex('D');
-		g.addVertex('G');
-		g.addEdge('G', 'F', new EmptyEdgeProp());
-		g.addEdge('U', 'G', new EmptyEdgeProp());
-		g.addEdge('U', 'G', new EmptyEdgeProp());
-		g.addEdge('F', 'F', new EmptyEdgeProp());
-		g.addEdge('F', 'F', new EmptyEdgeProp());
-		g.removeVertex('G');
+		g.addEdge('B', 'X', new EmptyEdgeProp());
+		g.addEdge('F', 'X', new EmptyEdgeProp());
 
-		System.out.println( g.inDegree('G') );     // 2
-		System.out.println( g.outDegree('G') );  // 1
+		g.addEdge('X', 'X', new EmptyEdgeProp());
+		//g.addEdge('X', 'X', new EmptyEdgeProp());
 
+		g.addVertex('M');
+		g.addVertex('F');
 
-		System.out.println( g.inDegree('F') );     // 3
-		System.out.println( g.outDegree('F') );  //  2
+		g.removeEdge('C', 'E');
+		g.removeEdge('F', 'X');
+		g.removeEdge('E', 'B');
+
+		System.out.println(g.connectedComponents());
 
 	}
 	
