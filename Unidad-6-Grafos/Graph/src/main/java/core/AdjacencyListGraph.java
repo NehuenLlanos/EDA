@@ -4,6 +4,8 @@ import java.util.*;
 
 import core_service.GraphBuilder;
 import core_service.GraphService;
+import use.EmptyEdgeProp;
+import use.WeightedEdge;
 
 abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 
@@ -170,7 +172,7 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 		Iterator<InternalEdge> edgesOtherVertex = getAdjacencyList().get(otherVertex).iterator();
 		while(edgesOtherVertex.hasNext()){
 			// Si encuentro una que se conecta con otherVertex la elimino y pongo en true el flag ans
-			if(edgesOtherVertex.next().target == edgesOtherVertex){
+			if(edgesOtherVertex.next().target == otherVertex){
 				edgesOtherVertex.remove();
 				ans = true;
 			}
@@ -350,53 +352,9 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 	}
 
 	public static void main(String[] args) {
-//		GraphService <Character,EmptyEdgeProp> g =
-//				new GraphBuilder<Character, EmptyEdgeProp>().
-//						withMultiplicity(Multiplicity.SIMPLE).
-//						withDirected(EdgeMode.UNDIRECTED).
-//						withAcceptSelfLoop(SelfLoop.NO).
-//						withAcceptWeight(Weight.NO).
-//						withStorage(Storage.SPARSE).
-//						build();
-//		g.addEdge('E', 'B', new EmptyEdgeProp());
-//		g.addEdge('A', 'B', new EmptyEdgeProp());
-//		g.addEdge('F', 'B', new EmptyEdgeProp());
-//		g.addVertex('D');
-//		g.addVertex('G');
-//		g.addEdge('E', 'F', new EmptyEdgeProp());
-//		g.addEdge('F', 'A', new EmptyEdgeProp());
-//		g.addEdge('F', 'G', new EmptyEdgeProp());
-//		g.addEdge('U', 'G', new EmptyEdgeProp());
-//		g.addEdge('T', 'U', new EmptyEdgeProp());
-//		g.addEdge('C', 'G', new EmptyEdgeProp());
-//
-//		int ans =  g.numberOfEdges();
-//		System.out.println(ans);
-
-		GraphService <Character,EmptyEdgeProp> g =
-				new GraphBuilder<Character, EmptyEdgeProp>().
-						withMultiplicity(Multiplicity.MULTIPLE).
-						withDirected(EdgeMode.DIRECTED).
-						withAcceptSelfLoop(SelfLoop.YES).
-						withAcceptWeight(Weight.NO).
-						withStorage(Storage.SPARSE).
-						build();
-
-		g.addVertex('D');
-		g.addVertex('G');
-		g.addEdge('G', 'F', new EmptyEdgeProp());
-		g.addEdge('U', 'G', new EmptyEdgeProp());
-		g.addEdge('U', 'G', new EmptyEdgeProp());
-		g.addEdge('F', 'F', new EmptyEdgeProp());
-		g.addEdge('F', 'F', new EmptyEdgeProp());
-		g.removeVertex('G');
-
-		System.out.println( g.inDegree('G') );     // 2
-		System.out.println( g.outDegree('G') );  // 1
-
-
-		System.out.println( g.inDegree('F') );     // 3
-		System.out.println( g.outDegree('F') );  //  2
+		GraphService <Character,WeightedEdge> g = GraphFactory.create(Multiplicity.MULTIPLE, EdgeMode.DIRECTED,
+				SelfLoop.YES, Weight.YES, Storage.SPARSE);
+		g.addEdge('A', 'B', new WeightedEdge(4));
 
 	}
 	

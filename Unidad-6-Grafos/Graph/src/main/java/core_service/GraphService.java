@@ -18,7 +18,6 @@ import java.util.Collection;
 // Esa clase InternalEdge s� tiene hashcode y equals implementado.
 
 public interface GraphService<V,E> {
-	
 	enum Multiplicity { SIMPLE, MULTIPLE};
 	enum EdgeMode { UNDIRECTED, DIRECTED};
 	enum SelfLoop { NO, YES};
@@ -48,48 +47,45 @@ public interface GraphService<V,E> {
 		
 	// if the graph is not "multi" and there exists other edge with same source and target, 
 	// throws exception
-	public void addEdge(V aVertex, V otherVertex, E theEdge);
+	void addEdge(V aVertex, V otherVertex, E theEdge);
 
 	
-	public int numberOfEdges();
-	
-	
+	int numberOfEdges();
 
 	// if the vertex does not exists returns false
 	// else remove the vertex and its incident edges and returns true
-	public boolean removeVertex(V aVertex);
+	boolean removeVertex(V aVertex);
 	
 	// removes the only edge that connects aVertex and otherVertex in a simple/default graph
 	// if the edge does not exists returns false
 	// else returns removes it and returns true
 	// the method is not allowed in multi graph/digraph=> throws exception
-	public boolean removeEdge(V aVertex, V otherVertex);
+	boolean removeEdge(V aVertex, V otherVertex);
 
-	
-	
-	// removes all the edges that connects aVertex and otherVertex in multi graph/digraph with theEdge properties
-	// removes the only edge that connects aVertex and otherVertex in a simple graph/digraph, 
+
+	// * removes all the edges that connects aVertex and otherVertex in multi graph/digraph with theEdge properties
+	// * removes the only edge that connects aVertex and otherVertex in a simple graph/digraph,
 	// without considering the edge properties
 	// if the edge does not exists returns false
 	// else returns returns true
-	public boolean removeEdge(V aVertex, V otherVertex, E theEdge);
+	boolean removeEdge(V aVertex, V otherVertex, E theEdge);
 
 	
 	// dump all the informations and structure of vertexes and edges in any order
-	public void dump();
+	void dump();
 	
 	
 	// if directed or vertex does not exists: throw exception
 	// if self loop contributes twice
-	public int degree(V vertex);
+	int degree(V vertex);
 	
 	// if undirected or vertex does not exists: throw exception
 	// if self loop contributes twice
-	public int inDegree(V vertex);
+	int inDegree(V vertex);
 	
 	// if undirected or vertex does not exists: throw exception
 	// if self loop contributes twice
-	public int outDegree(V vertex);
+	int outDegree(V vertex);
 	
 	// only for simple graph/digraph
 	// multi: throw exception
