@@ -4,6 +4,7 @@ package core_service; /**
 
 
 import java.util.Collection;
+import java.util.Set;
 
 
 // same interface for graph, digraph, multigraph, weighted graph, etc
@@ -90,5 +91,10 @@ public interface GraphService<V,E> {
 	// only for simple graph/digraph
 	// multi: throw exception
 //	public DijkstraPath<V,E> dijsktra(V source);
+
+
+	boolean hasCycles();
+
+	boolean isBipartite();
 	
 }

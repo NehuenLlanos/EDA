@@ -179,7 +179,7 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 		}
 		return ans;
 	}
-
+	// ESTE HAY QUE HACERLO BIEN ME DIO PAJA
 	// Permite remover la arista theEdge entre un vertice y otro.
 	@Override
 	public boolean removeEdge(V aVertex, V otherVertex, E theEdge) {
@@ -291,8 +291,9 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 		if(acceptSelfLoop){
 			throw new IllegalArgumentException(Messages.getString("Get all paths error"));
 		}
-
+		// Guarda los vertices visitads
 		Set<V> visited = new HashSet<>();
+		// Guarda un vector con el path
 		ArrayList<V> path = new ArrayList<>();
 
 		printAllPaths(startNode, endNode, visited,  path);
@@ -304,23 +305,124 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 		if(startNode.equals(endNode)){
 			System.out.println(path);
 
-			// Deshago porque no voy a pasar por flujo normal
 			visited.remove(endNode);
 			path.remove(endNode);
 
 			return;
 		}
-
 		Collection<InternalEdge> adjListOther = getAdjacencyList().get(startNode);
 		for(InternalEdge internalEdge : adjListOther){
 			if(!visited.contains(internalEdge.target)){
 				printAllPaths(internalEdge.target, endNode, visited, path);
 			}
 		}
-		// Deshago el vertice
 		visited.remove(startNode);
 		path.remove(startNode);
 	}
+	public boolean hasCycles(){
+		Set<V> allVisited = new HashSet<>();
+
+		for(V vertex : getAdjacencyList().keySet()){
+			if(!allVisited.contains(vertex)){
+				Set<V> connectedVisited = new HashSet<>();
+				if(hasCycles(null, vertex, connectedVisited))
+					return true;
+				allVisited.addAll(connectedVisited);
+			}
+		}
+		return false;
+	}
+
+	public boolean hasCycles(V lastAdded, V vertex, Set<V> visited){
+
+		if(visited.contains(vertex))
+			return true;
+
+		visited.add(vertex);
+
+		boolean lastAddedAppeared = false;
+		Collection<InternalEdge> adjListOther = getAdjacencyList().get(vertex);
+		for(InternalEdge internalEdge : adjListOther){
+			if(internalEdge.target.equals(lastAdded)){
+				if(lastAddedAppeared || isDirected)
+					return true; // cycle of to vertexes
+				lastAddedAppeared = true;
+			}else if(hasCycles(vertex, internalEdge.target, visited))
+				return true;
+			visited.remove(vertex);
+		}
+
+		return false;
+	}
+	public boolean isBipartite(){
+
+		Set<V> c1 = new HashSet<>();
+		Set<V> c2 = new HashSet<>();
+		int i=0;
+		for(V vertex : adjacencyList.keySet()){
+			if(i%2==0){
+				c1.add(vertex);
+			} else {
+				c2.add(vertex);
+			}
+			i++;
+		}
+
+		for(V vertex: c1){
+			Collection<InternalEdge> adj = getAdjacencyList().get(vertex);
+			for(InternalEdge internalEdge: adj){
+				if(!c2.contains(internalEdge.target)){
+					return false;
+				}
+			}
+		}
+
+		for(V vertex: c2){
+			Collection<InternalEdge> adj = getAdjacencyList().get(vertex);
+			for(InternalEdge internalEdge: adj){
+				if(!c1.contains(internalEdge.target)){
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+//	public boolean isBipartite(){
+//		Set<V> visited = new HashSet<>();
+//		boolean ans = true;
+//		for(V vertex : adjacencyList.keySet()){
+//			visited.clear();
+//			if(! oddCycle(vertex, vertex, visited, 0)){
+//				return false;
+//			}
+//		}
+//		return true;
+//	}
+//
+//	private boolean oddCycle(V start, V end, Set<V> visited, int length){
+//		if(length != 0){
+//			visited.add(start);
+//		}
+//		if(start.equals(end) && length > 0){
+//			visited.remove(start);
+//			return (length%2 == 0);
+//		}
+//
+//		Collection<InternalEdge> edges = adjacencyList.get(start);
+//		boolean ans = true;
+//		for(InternalEdge edge : edges){
+//			if(!visited.contains(edge.target)){
+//				ans = oddCycle(edge.target, end, visited, length + 1);
+//				if(!ans){
+//					return false;
+//				}
+//			}
+//		}
+//		visited.remove(start);
+//		return true;
+//	}
 
 	class InternalEdge {
 		E edge;
@@ -330,7 +432,6 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 			this.target = target;
 			this.edge = propEdge;
 		}
-
 		@Override
 		public boolean equals(Object obj) {
 			@SuppressWarnings("unchecked")
@@ -339,7 +440,6 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 			return ((edge == null && aux.edge == null) || (edge != null && edge.equals(aux.edge)))
 					&& target.equals(aux.target);
 		}
-
 		@Override
 		public int hashCode() {
 			return target.hashCode();
@@ -352,10 +452,29 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 	}
 
 	public static void main(String[] args) {
-		GraphService <Character,WeightedEdge> g = GraphFactory.create(Multiplicity.MULTIPLE, EdgeMode.DIRECTED,
-				SelfLoop.YES, Weight.YES, Storage.SPARSE);
-		g.addEdge('A', 'B', new WeightedEdge(4));
+		GraphService <Character,EmptyEdgeProp> g = GraphFactory.create(Multiplicity.MULTIPLE, EdgeMode.DIRECTED,
+				SelfLoop.YES, Weight.NO, Storage.SPARSE);
+		g.addEdge('A', 'B', new EmptyEdgeProp());
+		g.addEdge('A', 'B', new EmptyEdgeProp());
+		g.addEdge('A', 'C', new EmptyEdgeProp());
+		g.addEdge('C', 'B', new EmptyEdgeProp());
+		System.out.println(g.hasCycles()); // TRUE
+		System.out.println(g.isBipartite()); // FALSE
 
+		GraphService <Character,EmptyEdgeProp> f = GraphFactory.create(Multiplicity.MULTIPLE, EdgeMode.DIRECTED,
+				SelfLoop.YES, Weight.NO, Storage.SPARSE);
+		f.addEdge('A', 'B', new EmptyEdgeProp());
+		f.addEdge('A', 'D', new EmptyEdgeProp());
+		f.addEdge('C', 'B', new EmptyEdgeProp());
+		f.addEdge('C', 'F', new EmptyEdgeProp());
+		f.addEdge('E', 'D', new EmptyEdgeProp());
+		f.addEdge('E', 'F', new EmptyEdgeProp());
+		System.out.println(f.isBipartite()); // TRUE
+
+		GraphService <Character,EmptyEdgeProp> e = GraphFactory.create(Multiplicity.MULTIPLE, EdgeMode.DIRECTED,
+				SelfLoop.YES, Weight.NO, Storage.SPARSE);
+		e.addEdge('A', 'B', new EmptyEdgeProp());
+		System.out.println(e.hasCycles()); // FALSE
 	}
 	
 	
