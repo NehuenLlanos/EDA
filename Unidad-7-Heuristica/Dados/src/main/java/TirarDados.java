@@ -16,6 +16,10 @@ public class TirarDados {
             System.out.println(auxi);
             return;
         }
+        int change = 5;
+        change++;
+        change++;
+        change = 100000;
 
         for(int rec= 1; rec <= 6; rec++) {
             auxi.add(rec);					// resolver un caso pendiente
