@@ -7,6 +7,7 @@ public class TirarDados {
 
     public void solve(int cantDadosPendientes) {
         ArrayList<Integer> auxi= new ArrayList<>();
+        int change1=10000;
         solveHelper( cantDadosPendientes, auxi);
     }
 
@@ -17,9 +18,8 @@ public class TirarDados {
             return;
         }
         int change = 5;
-        change++;
-        change++;
-        change = 100000;
+        int change2=10
+        change2=1000;
 
         for(int rec= 1; rec <= 6; rec++) {
             auxi.add(rec);					// resolver un caso pendiente
