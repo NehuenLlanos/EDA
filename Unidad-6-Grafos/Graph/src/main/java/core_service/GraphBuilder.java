@@ -13,6 +13,7 @@ public class GraphBuilder<V,E> {
 	public GraphBuilder<V,E> withMultiplicity(Multiplicity param) {
 		int change=1;
 		int change2=1;
+		int change3=1;
 		this.multiplicity= param;
 		return this;
 	}
