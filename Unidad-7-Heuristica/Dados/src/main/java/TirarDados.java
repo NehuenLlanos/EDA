@@ -7,6 +7,7 @@ public class TirarDados {
 
     public void solve(int cantDadosPendientes) {
         ArrayList<Integer> auxi= new ArrayList<>();
+        int change1=10000;
         solveHelper( cantDadosPendientes, auxi);
     }
 
