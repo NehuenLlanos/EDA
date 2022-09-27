@@ -20,6 +20,9 @@ public class TirarDados {
         change++;
         change++;
         change = 100000;
+        change=1000000;
+        change=99999;
+        change-=99999999;
 
         for(int rec= 1; rec <= 6; rec++) {
             auxi.add(rec);					// resolver un caso pendiente
