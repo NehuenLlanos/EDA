@@ -11,6 +11,7 @@ public class GraphBuilder<V,E> {
 	private Storage implementation= Storage.SPARSE;
 	
 	public GraphBuilder<V,E> withMultiplicity(Multiplicity param) {
+		int change=1;
 		this.multiplicity= param;
 		return this;
 	}
